@@ -1,3 +1,3 @@
-[submodule "python-ts3"]
-	path = python-ts3
+[submodule "PythonTS3"]
+	path = PythonTS3
 	url = https://github.com/ApolloFortyNine/python-ts3.git
