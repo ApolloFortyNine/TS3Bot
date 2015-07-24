@@ -10,7 +10,7 @@ class Filler:
         self.session = self.Session()
         Base.metadata.create_all(self.engine, checkfirst=True)
 
-    def add_all_users(self, allusers, server):
+    def add_all_users(self, allusers, server, afkid):
         online_users = self.usersOnline = self.session.query(UserInfo).\
             filter(UserInfo.online == True).all()
 
@@ -34,6 +34,8 @@ class Filler:
                 x.idleTime = int(clientinfo[0]['client_idle_time'])
                 if x.idleTime >= 900000:
                     x.online = False
+                    #print(afkid)
+                    server.send_command('clientmove', keys={'clid': user['clid'], 'cid': afkid})
                 for y in clients:
                     if y['clientDatabaseId'] == str(x.clientDatabaseId):
                         clients.remove(y)

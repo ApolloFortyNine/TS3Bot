@@ -41,7 +41,7 @@ def fill_database():
         x.pop("client_nickname", None)
         x.pop("client_database_id", None)
 
-    filler.add_all_users(clientList, server)
+    filler.add_all_users(clientList, server, afkcid)
 
 
     print(time.time() - start)
