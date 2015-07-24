@@ -1,6 +1,6 @@
 import time
 from filler import Filler
-from config import Config
+import config
 from ts3 import TS3Server
 
 # Outer loop running through all challenger teams (dataM)
@@ -8,9 +8,8 @@ def fill_database():
     filler = Filler()
     start = time.time()
 
-    c = Config()
-    server = TS3Server(c.serveraddress, 10011, 1)
-    server.login(c.username, c.password)
+    server = TS3Server(config.serveraddress, 10011, 1)
+    server.login(config.username, config.password)
     server.send_command('use', keys={'port': 9987})
 
     clientList = server.clientlist()
