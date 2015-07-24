@@ -18,6 +18,8 @@ class Filler:
         for x in allusers:
             clientIds.append(allusers[x])
 
+        print(clientIds)
+
         for x in online_users:
             if x.clientDatabaseId in clientIds:
                 x.endTime = datetime.now()
@@ -26,6 +28,7 @@ class Filler:
             else:
                 x.online = False
 
-        for x in clientIds['clientDatabaseId']:
+        for x in clientIds:
+            print(type(x))
             self.session.add(UserInfo(**x))
         self.session.commit()
