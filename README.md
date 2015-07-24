@@ -14,3 +14,7 @@ clientinfo clid=VALUE
 * Check online users in DB with actual online users
 * If already online, update end time. If not, create new row for user
 * Make sure to update time idle column, and check if speakers are muted
+
+# Formatter
+
+Install yapf (pip install yapf), then inside project directory run "yapf --style yapf.config -i ."
