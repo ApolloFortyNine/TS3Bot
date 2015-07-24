@@ -44,8 +44,9 @@ class Filler:
                 x.online = False
 
         for x in clients:
-            x.pop('clid', None)
-            if x.idleTime >= 900000:
+            clientinfo = server.send_command('clientinfo', keys={'clid': x['clid']}).data
+            if int(clientinfo[0]['client_idle_time']) >= 900000:
                 x.online = False
+            x.pop('clid', None)
             self.session.add(UserInfo(**x))
         self.session.commit()
