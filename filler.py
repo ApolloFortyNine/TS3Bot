@@ -20,17 +20,19 @@ class Filler:
             if str(x['clientDatabaseId']) not in clientIds:
                 clients.append(x)
                 clientIds.append(x['clientDatabaseId'])
-
+        client_infos = {}
+        user = {}
         for x in online_users:
             if str(x.clientDatabaseId) in clientIds:
                 for y in clients:
                     if x.username == y['username']:
                         user = y
+                        client_infos[user['clid']] = server.send_command('clientinfo', keys={'clid': user['clid']}).data
                         break
                 x.endTime = datetime.datetime.now()
                 x.totalTime = (x.endTime - x.startTime).total_seconds()
-                clientinfo = server.send_command('clientinfo', keys={'clid': user['clid']}).data
-                x.idleTime = int(clientinfo[0]['client_idle_time'])
+                client_info = client_infos[user['clid']]
+                x.idleTime = int(client_info[0]['client_idle_time'])
                 if x.idleTime >= 900000:
                     x.online = False
                     #server.send_command('clientmove', keys={'clid': user['clid'], 'cid': afkid})
@@ -44,9 +46,13 @@ class Filler:
                 x.online = False
 
         for x in clients:
-            clientinfo = server.send_command('clientinfo', keys={'clid': x['clid']}).data
-            if int(clientinfo[0]['client_idle_time']) >= 900000:
-                x.online = False
+            if x['clid'] in client_infos.keys():
+                print('hi')
+                client_info = client_infos[x['clid']]
+            else:
+                client_info = server.send_command('clientinfo', keys={'clid': x['clid']}).data
+            if int(client_info[0]['client_idle_time']) >= 900000:
+                x['online'] = False
             x.pop('clid', None)
             self.session.add(UserInfo(**x))
         self.session.commit()
