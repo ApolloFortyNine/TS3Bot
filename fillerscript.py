@@ -47,4 +47,6 @@ def fill_database():
     print(time.time() - start)
 
 
-fill_database()
+while True:
+    fill_database()
+    time.sleep(15)
