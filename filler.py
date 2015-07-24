@@ -10,7 +10,7 @@ class Filler:
         self.session = self.Session()
         Base.metadata.create_all(self.engine, checkfirst=True)
 
-    def add_all_users(self, allusers):
+    def add_all_users(self, allusers, server):
         online_users = self.usersOnline = self.session.query(UserInfo).\
             filter(UserInfo.online == True).all()
 
@@ -24,8 +24,16 @@ class Filler:
 
         for x in online_users:
             if str(x.clientDatabaseId) in clientIds:
+                for y in clients:
+                    if x.username == y['username']:
+                        user = y
+                        break
                 x.endTime = datetime.datetime.now()
                 x.totalTime = (x.endTime - x.startTime).total_seconds()
+                clientinfo = server.send_command('clientinfo', keys={'clid': user['clid']}).data
+                x.idleTime = int(clientinfo[0]['client_idle_time'])
+                if x.idleTime >= 900000:
+                    x.online = False
                 for y in clients:
                     if y['clientDatabaseId'] == str(x.clientDatabaseId):
                         clients.remove(y)
@@ -34,5 +42,6 @@ class Filler:
                 x.online = False
 
         for x in clients:
+            x.pop('clid', None)
             self.session.add(UserInfo(**x))
         self.session.commit()

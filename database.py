@@ -14,4 +14,5 @@ class UserInfo(Base):
     startTime = Column(DateTime)
     endTime = Column(DateTime)
     totalTime = Column(BigInteger)
+    idleTime = Column(BigInteger)
     online = Column(Boolean)
