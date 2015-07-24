@@ -4,6 +4,7 @@ import config
 from ts3 import TS3Server
 import datetime
 
+
 # Outer loop running through all challenger teams (dataM)
 def fill_database():
     filler = Filler()
@@ -43,7 +44,7 @@ def fill_database():
 
     filler.add_all_users(clientList, server, afkcid)
 
-
     print(time.time() - start)
+
 
 fill_database()
