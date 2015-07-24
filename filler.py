@@ -14,21 +14,24 @@ class Filler:
         online_users = self.usersOnline = self.session.query(UserInfo).\
             filter(UserInfo.online == True).all()
 
+        clients = []
         clientIds = []
         for x in allusers:
-            clientIds.append(allusers[x])
+            clients.append(x)
+            clientIds.append(x['clientDatabaseId'])
 
-        print(clientIds)
 
         for x in online_users:
-            if x.clientDatabaseId in clientIds:
-                x.endTime = datetime.now()
-                x.totalTime = (x.endTime - x.startTime).inSeconds()
-                clientIds.remove(x)
+            if str(x.clientDatabaseId) in clientIds:
+                x.endTime = datetime.datetime.now()
+                x.totalTime = (x.endTime - x.startTime).total_seconds()
+                for y in clients:
+                    if y['clientDatabaseId'] == str(x.clientDatabaseId):
+                        clients.remove(y)
+                        break
             else:
                 x.online = False
 
-        for x in clientIds:
-            print(type(x))
+        for x in clients:
             self.session.add(UserInfo(**x))
         self.session.commit()
