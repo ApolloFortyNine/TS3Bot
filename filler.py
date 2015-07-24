@@ -17,8 +17,9 @@ class Filler:
         clients = []
         clientIds = []
         for x in allusers:
-            clients.append(x)
-            clientIds.append(x['clientDatabaseId'])
+            if str(x['clientDatabaseId']) not in clientIds:
+                clients.append(x)
+                clientIds.append(x['clientDatabaseId'])
 
 
         for x in online_users:

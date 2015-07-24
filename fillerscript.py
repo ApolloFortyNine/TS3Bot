@@ -16,6 +16,8 @@ def fill_database():
     allClients = server.clientlist()
     clientList = []
 
+    print(server.send_command('channellist').data)
+
     for x in allClients:
         if int(allClients[x]['client_type']) == 0:
             clientList.append(allClients[x])
