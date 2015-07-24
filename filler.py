@@ -34,6 +34,8 @@ class Filler:
                 if x.idleTime >= 900000:
                     x.online = False
                     server.send_command('clientmove', keys={'clid': user['clid'], 'cid': afkid})
+                    x.endTime = x.endTime - datetime.timedelta(minutes=15)
+                    x.idleTime = x.idleTime - (15*60)
                 for y in clients:
                     if y['clientDatabaseId'] == str(x.clientDatabaseId):
                         clients.remove(y)
@@ -43,5 +45,7 @@ class Filler:
 
         for x in clients:
             x.pop('clid', None)
+            if x.idleTime >= 900000:
+                x.online = False
             self.session.add(UserInfo(**x))
         self.session.commit()
