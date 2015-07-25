@@ -14,25 +14,28 @@ timed_log.setFormatter(formatter)
 logger.addHandler(timed_log)
 
 # Outer loop running through all challenger teams (dataM)
+
+server = TS3Server(config.serveraddress, 10011, 1)
+server.login(config.username, config.password)
+server.send_command('use', keys={'port': 9987})
+
 def fill_database():
     filler = Filler()
     start = time.time()
-
-    server = TS3Server(config.serveraddress, 10011, 1)
-    server.login(config.username, config.password)
-    server.send_command('use', keys={'port': 9987})
 
     allClients = server.clientlist()
     clientList = []
 
     channels = server.send_command('channellist').data
 
+    afk_cid = ''
+
     for x in channels:
         if x['channel_name'] == 'AFK':
-            afkcid = x['cid']
+            afk_cid = x['cid']
 
     for x in allClients:
-        if (int(allClients[x]['client_type']) == 0) & (str(allClients[x]['cid']) != str(afkcid)):
+        if (int(allClients[x]['client_type']) == 0) and (str(allClients[x]['cid']) != str(afk_cid)):
             clientList.append(allClients[x])
             continue
 
@@ -43,6 +46,7 @@ def fill_database():
         x['endTime'] = datetime.datetime.now()
         x['totalTime'] = 0
         x['idleTime'] = 0
+        x['messege_sent'] = False
         x['online'] = True
 
         x.pop("cid", None)
@@ -50,7 +54,7 @@ def fill_database():
         x.pop("client_nickname", None)
         x.pop("client_database_id", None)
 
-    filler.add_all_users(clientList, server, afkcid)
+    filler.add_all_users(clientList, server, afk_cid)
 
     print(time.time() - start)
 
