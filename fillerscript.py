@@ -3,7 +3,15 @@ from filler import Filler
 import config
 from ts3 import TS3Server
 import datetime
+import logging
+import logging.handlers
 
+logger = logging.getLogger('TS3bot')
+logger.setLevel(logging.INFO)
+timed_log = logging.handlers.TimedRotatingFileHandler('fill.log', when='D', interval=1)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+timed_log.setFormatter(formatter)
+logger.addHandler(timed_log)
 
 # Outer loop running through all challenger teams (dataM)
 def fill_database():
@@ -48,5 +56,8 @@ def fill_database():
 
 
 while True:
-    fill_database()
+    try:
+        fill_database()
+    except:
+        logger.exception('Error Raised')
     time.sleep(15)
