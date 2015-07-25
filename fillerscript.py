@@ -60,4 +60,5 @@ while True:
         fill_database()
     except:
         logger.exception('Error Raised')
+        break
     time.sleep(15)
