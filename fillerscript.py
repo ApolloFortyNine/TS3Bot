@@ -18,6 +18,8 @@ logger.addHandler(timed_log)
 server = TS3Server(config.serveraddress, 10011, 1)
 server.login(config.username, config.password)
 server.send_command('use', keys={'port': 9987})
+#server.send_command('servernotifyregister', keys={'event': 'textprivate'})
+
 
 def fill_database():
     filler = Filler()
@@ -46,7 +48,7 @@ def fill_database():
         x['endTime'] = datetime.datetime.now()
         x['totalTime'] = 0
         x['idleTime'] = 0
-        x['messege_sent'] = False
+        x['messegeSent'] = False
         x['online'] = True
 
         x.pop("cid", None)

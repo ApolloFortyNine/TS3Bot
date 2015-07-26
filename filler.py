@@ -44,13 +44,17 @@ class Filler:
                 #    x.online = False
                 #    x.endTime = x.endTime - datetime.timedelta(minutes=15)
                 #    x.idleTime = x.idleTime - (15 * 60)
-                if (int(client_info[0]['client_idle_time']) >= self.warning_afk) and (user['messege_sent'] == False):
+                print(x.messegeSent)
+                if (int(client_info[0]['client_idle_time']) >= self.warning_afk) and (x.messegeSent == False):
                     server.send_command('sendtextmessage', keys={'targetmode': 1, 'target': user['clid'], 'msg':
                         'If you are not afk, respond to this messege. You will be marked afk in 15 minutes.'})
-                    user['messege_sent'] == True
-                elif (int(client_info[0]['client_idle_time']) >= self.marked_afk) and (user['messege_sent'] == True):
+                    x.messegeSent = True
+                    print(user['username']+ 'lol1')
+                elif (int(client_info[0]['client_idle_time']) >= self.marked_afk) and (x.messegeSent == True):
                     server.send_command('clientmove', keys={'clid': user['clid'], 'cid': afkid})
+                    print(user['username'] + 'lol2')
                     user['online'] = False
+                    x.messegeSent = False
                 for y in clients:
                     if y['clientDatabaseId'] == str(x.clientDatabaseId):
                         clients.remove(y)
@@ -66,11 +70,10 @@ class Filler:
             else:
                 if server.send_command('clientinfo', keys={'clid': x['clid']}).is_successful:
                     client_info = server.send_command('clientinfo', keys={'clid': x['clid']}).data
-            if (int(client_info[0]['client_idle_time']) >= self.warning_afk) and (x['messege_sent'] == False):
+            if (int(client_info[0]['client_idle_time']) >= self.warning_afk) and (x['messegeSent'] == False):
                 server.send_command('sendtextmessage', keys={'targetmode': 1, 'target': x['clid'], 'msg':
                     'If you are not afk, respond to this messege. You will be marked afk in 15 minutes.'})
-                x['messege_sent'] == True
+                x['messegeSent'] == True
             x.pop('clid', None)
-            x.pop('messege_sent', None)
             self.session.add(UserInfo(**x))
         self.session.commit()

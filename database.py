@@ -15,4 +15,5 @@ class UserInfo(Base):
     endTime = Column(DateTime)
     totalTime = Column(BigInteger)
     idleTime = Column(BigInteger)
+    messegeSent = Column(Boolean)
     online = Column(Boolean)
